@@ -1,32 +1,395 @@
-/* CSS Variables for Theme Management */
+/* CSS Variables for OTT Dark Theme */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
+  --primary: #1e1e1e;
+  --secondary: #ffd600;
+  --accent: #ff1744;
+  --bg: #1a1a1a;
+  --bg-card: #232323;
+  --bg-emoji-bar: rgba(0,0,0,0.75);
+  --border: #333;
+  --text-bright: #fff;
+  --text-dim: #d8e2ff;
+  --text-muted: #d7d7d7;
+  --score: #ffd600;
+  --badge-live: #ff1744;
+  --badge-upcoming: #ffd600;
+  --badge-completed: #888;
+  --shadow: 0 4px 24px rgba(0,0,0,0.25);
 }
 
 [data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+  --bg: #1a1a1a;
+  --bg-card: #232323;
+  --text-bright: #fff;
+  --text-dim: #d8e2ff;
+  --text-muted: #d7d7d7;
+  --border: #333;
 }
 
-.App {
-  text-align: center;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+/* Core Layout */
+body, .App.ott-root {
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text-bright);
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.ott-header {
+  padding: 0 0 24px 0;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-shadow: var(--shadow);
+  min-height: 64px;
+  z-index: 2;
+}
+
+.ott-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--secondary);
+  flex: 1;
+  margin: 0 0 0 2.5vw;
+  letter-spacing: 0.02em;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 18px;
+  right: 32px;
+  background-color: var(--accent);
+  color: var(--text-bright);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 22px;
+  font-size: 1em;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.3s, color 0.3s;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+}
+
+.theme-toggle:hover {
+  background: var(--secondary);
+  color: var(--primary);
+}
+
+
+.ott-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2vw;
+  padding: 2vw 0 0 0;
+  min-height: 60vh;
+  align-items: center;
+}
+
+.ott-player-area {
+  width: 100vw;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
+
+.player-wrapper {
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16/9;
+  margin: 0 auto;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  background: #090909;
+}
+
+/* The black transparent emoji row above the seekbar */
+.emoji-bar-row {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 52px; /* just over the ReactPlayer controls for seekbar  */
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.emoji-bar {
+  background: var(--bg-emoji-bar);
+  border-radius: 18px;
+  box-shadow: 0 2px 16px 3px rgba(0,0,0,0.14);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 22px;
+  min-width: 180px;
+  pointer-events: auto;
+}
+.emoji-btn {
+  background: transparent;
+  outline: 0;
+  border: 0;
+  color: var(--text-bright);
+  cursor: pointer;
+  font-size: 2rem;
+  margin: 0 3px;
+  padding: 0 7px;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.28));
+  position: relative;
+  transition: transform 0.14s;
+  display: flex;
+  flex-direction: column;
+}
+.emoji-btn:hover, .emoji-btn:focus {
+  transform: scale(1.27);
+  color: var(--accent);
+}
+
+.emoji-symbol {
+  font-size: 2rem;
+}
+.emoji-count {
+  font-size: 0.98rem;
+  color: var(--secondary);
+  font-weight: 600;
+  line-height: 1.10rem;
+  margin-top: -4px;
+}
+
+.emoji-anim-layer {
+  position: absolute;
+  left: 0; top: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 55;
+}
+
+.emoji-flying {
+  position: absolute;
+  bottom: 7px;
+  font-size: 2.2rem;
+  pointer-events: none;
+  animation: flyUp 1.4s cubic-bezier(0.230, 1.000, 0.320, 1.000) forwards;
+  will-change: transform, opacity;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  left: 50%;
+  transform: translateX(-50%) scale(1);
+}
+
+@keyframes flyUp {
+  0% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+  50% { opacity: 0.89; transform: translateX(-50%) scale(1.18) translateY(-38px);}
+  100% { opacity: 0.15; transform: translateX(-50%) scale(2.4) translateY(-150px);}
+}
+
+/* Info Card Below Video */
+.ott-info-section {
+  width: 100vw;
+  max-width: 900px;
+  margin: 36px auto 0 auto;
+  background: var(--bg-card);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 24px 16px 18px 16px;
+  color: var(--text-bright);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.team-score-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.team-logo {
+  width: 40px; height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2.5px solid var(--secondary);
+  box-shadow: 0 3px 12px 1px rgba(0,0,0,0.18);
+}
+.team-logo-placeholder {
+  background: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ddb988;
+  font-size: 1.35em;
+  font-weight: 700;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.team-name {
+  font-weight: 700;
+  color: var(--secondary);
+  font-size: 1.16rem;
+}
+.team-score {
+  font-size: 1.32rem;
+  font-weight: 700;
+  color: var(--score);
+}
+
+.vs {
+  min-width: 64px;
+  text-align: center;
+  font-size: 1rem;
+  color: #aaa;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-weight: 700;
+}
+
+.badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin: 0 auto;
+  margin-top: 2px;
+  display: inline-block;
+}
+.badge-live {
+  background: var(--badge-live);
+  color: #fff;
+}
+.badge-upcoming {
+  background: var(--badge-upcoming);
+  color: #333;
+}
+.badge-completed {
+  background: var(--badge-completed);
+  color: #fff;
+}
+
+.match-meta-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-dim);
+  font-size: 0.99rem;
+  margin-top: 9px;
+  margin-bottom: 2px;
+}
+.match-meta-row .match-date {
+  font-weight: 500;
+}
+.match-meta-row .match-id {
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.players-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 8vw;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  overflow-x: auto;
+}
+.player-list {
+  color: var(--secondary);
+}
+.ott-footer {
+  background: var(--primary);
+  color: var(--text-muted);
+  padding: 18px 0 11px 0;
+  text-align: center;
+  margin-top: 32px;
+  box-shadow: 0 0 12px 2px #181818;
+  font-size: 1.06em;
+  font-weight: 600;
+}
+
+.ott-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 360px;
+}
+.loading-spinner {
+  border: 4px solid #232323;
+  border-top: 4px solid var(--accent);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 18px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+.ott-error {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 1.10em;
+  background: #2b1f28;
+  padding: 12px 0;
+  margin: 2px auto 9px auto;
+  border-radius: 10px;
+  max-width: 420px;
+}
+
+@media (max-width: 900px) {
+  .ott-player-area, .ott-info-section {
+    width: 99vw;
+    max-width: 99vw;
+  }
+}
+@media (max-width: 650px) {
+  .ott-header {
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 54px;
+    gap: 3px;
+    padding: 6px 0 9px 5vw;
+  }
+  .theme-toggle {
+    position: static;
+    margin-left: auto;
+  }
+  .ott-main {
+    padding: 2vw 0;
+  }
+  .player-wrapper {
+    border-radius: 9px;
+    aspect-ratio: 16/9;
+  }
+  .score-row {
+    flex-direction: column;
+    gap: 11px;
+    align-items: stretch;
+  }
+  .ott-info-section {
+    border-radius: 10px;
+    padding: 14px 2vw 11px 2vw;
+  }
+}
+/* Remove previous demo styles */
+.App-logo, .App-link, .App-header {
+  display: none !important;
 }
 
 .App-logo {
