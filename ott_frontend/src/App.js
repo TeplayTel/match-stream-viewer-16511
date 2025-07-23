@@ -5,9 +5,15 @@ import './App.css';
 /**
  * Emoji details:
  */
+/** =========================================================================
+ * IMPORTANT: Fix mismatch between frontend emoji keys and backend expected values
+ * Backend expects emoji key to be either "6", "out", "surprise", "laugh", "celebration"
+ * (see ott_backend/src/api/endpoints.py: EMOJI_TYPES, and OpenAPI spec).
+ * Frontend was sending "six" (not "6"), so adjust key for six to be "6".
+ */
 const EMOJI_OPTIONS = [
   {
-    key: 'six',
+    key: '6',
     label: '6️⃣',
     description: 'SIX'
   },
