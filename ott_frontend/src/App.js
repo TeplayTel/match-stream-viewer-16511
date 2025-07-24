@@ -216,7 +216,31 @@ function App() {
             </div>
           )}
           {!loading && showVideo && (
-            <div className="player-wrapper">
+            <div className="player-wrapper" style={{ position: "relative" }}>
+              {/* Stop/Close Button */}
+              <button
+                style={{
+                  position: "absolute",
+                  top: 12,
+                  right: 16,
+                  zIndex: 9,
+                  background: "rgba(30,30,30,0.85)",
+                  color: "#FFD600",
+                  border: "none",
+                  borderRadius: "17px",
+                  fontWeight: "bold",
+                  fontSize: "1.07em",
+                  padding: "7px 18px",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.22)",
+                  transition: "background 0.2s, color 0.2s"
+                }}
+                onClick={() => setShowVideo(false)}
+                aria-label="Stop video and close player"
+                data-testid="stop-video"
+              >
+                ✖ Stop
+              </button>
               <ReactPlayer
                 ref={playerRef}
                 className="react-player"
