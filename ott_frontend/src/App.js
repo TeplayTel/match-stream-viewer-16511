@@ -172,6 +172,9 @@ function App() {
   // Defensive (render nothing if data not ready)
   const loading = !match;
 
+  // State to track if user wants to watch video
+  const [showVideo, setShowVideo] = useState(false);
+
   return (
     <div className="App ott-root dark">
       <header className="ott-header">
@@ -186,9 +189,58 @@ function App() {
       </header>
       <main className="ott-main">
         <div className="ott-player-area">
-          {/* Video Player */}
-          {!loading && (
-            <div className="player-wrapper">
+          {/* Video Player area */}
+          {!loading && !showVideo && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "2rem auto" }}>
+              <button
+                style={{
+                  fontSize: "1.25em",
+                  padding: "1em 2.5em",
+                  borderRadius: "13px",
+                  border: "none",
+                  background: "var(--secondary, #ffd600)",
+                  color: "#222",
+                  fontWeight: "bold",
+                  boxShadow: "0 3px 12px 1px rgba(0,0,0,0.13)",
+                  marginBottom: "1.1em",
+                  cursor: "pointer"
+                }}
+                onClick={() => setShowVideo(true)}
+                data-testid="watch-video"
+              >
+                ▶️ Watch Match Video
+              </button>
+              <span style={{ color: "#ddd", fontSize: "1em" }}>
+                Stream only loads when you click "Watch Match Video".
+              </span>
+            </div>
+          )}
+          {!loading && showVideo && (
+            <div className="player-wrapper" style={{ position: "relative" }}>
+              {/* Stop/Close Button */}
+              <button
+                style={{
+                  position: "absolute",
+                  top: 12,
+                  right: 16,
+                  zIndex: 9,
+                  background: "rgba(30,30,30,0.85)",
+                  color: "#FFD600",
+                  border: "none",
+                  borderRadius: "17px",
+                  fontWeight: "bold",
+                  fontSize: "1.07em",
+                  padding: "7px 18px",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.22)",
+                  transition: "background 0.2s, color 0.2s"
+                }}
+                onClick={() => setShowVideo(false)}
+                aria-label="Stop video and close player"
+                data-testid="stop-video"
+              >
+                ✖ Stop
+              </button>
               <ReactPlayer
                 ref={playerRef}
                 className="react-player"
@@ -246,7 +298,7 @@ function App() {
           {loading && (
             <div className="ott-loading">
               <div className="loading-spinner"></div>
-              <span>Loading match video…</span>
+              <span>Loading match…</span>
             </div>
           )}
         </div>
